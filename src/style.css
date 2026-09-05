@@ -76,7 +76,7 @@ h2 { font-size: 1.5em; color: var(--wood-dark); }
   align-items: center; justify-content: center; gap: 18px;
 }
 .title-screen .logo { text-align: center; }
-.title-screen .logo h1 { font-family: 'Borel', 'Fredoka', cursive; font-weight: 400; font-size: 4.2em; line-height: 1.4; padding-top: 0.25em; color: #fff; text-shadow: 0 4px 0 var(--wood-dark), 0 8px 20px var(--shadow); }
+.title-screen .logo h1 { font-family: 'Borel', 'Fredoka', cursive; font-weight: 400; font-size: 4.2em; line-height: 1.4; padding-top: 0.25em; letter-spacing: 0; word-spacing: 0.05em; font-kerning: normal; font-variant-ligatures: common-ligatures contextual; font-feature-settings: 'liga' 1, 'calt' 1; text-rendering: optimizeLegibility; color: #fff; text-shadow: 0 4px 0 var(--wood-dark), 0 8px 20px var(--shadow); }
 .title-screen .logo p { color: #fff; font-size: 1.1em; margin: 0; text-shadow: 0 2px 0 var(--wood-dark); }
 .title-screen .menu { display: flex; flex-direction: column; gap: 10px; min-width: 240px; }
 .title-screen .btn { font-size: 1.3em; padding: 14px 30px; }
