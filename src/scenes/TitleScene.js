@@ -9,6 +9,7 @@ import { makeSkyDome, makeClouds } from '../world/textures.js';
 import { PALETTE } from '../world/materials.js';
 
 export class TitleScene extends BaseScene {
+  touchControls = false; // tap-driven menu scene: no virtual stick/buttons
   constructor() { super(); this.curve = { curvature: 0.004, start: 4 }; }
   build() {
     if (this.built) return; this.built = true;

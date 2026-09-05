@@ -24,6 +24,7 @@ export class SceneManager {
     if (this.current) { this.current.exit?.(); }
     this.game.ui.clearScene();
     this.current = next; this.currentName = name;
+    this.game.input.setTouchVisible(next.touchControls !== false);
     await next.enter?.(params);
     next.resize?.(this.game.width, this.game.height);
     // one frame so the new scene renders under the cover before the iris opens
@@ -38,6 +39,7 @@ export class SceneManager {
     if (this.current) this.current.exit?.();
     this.game.ui.clearScene();
     this.current = next; this.currentName = name;
+    this.game.input.setTouchVisible(next.touchControls !== false);
     await next.enter?.(params);
     next.resize?.(this.game.width, this.game.height);
   }

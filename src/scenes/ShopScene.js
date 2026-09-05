@@ -22,6 +22,7 @@ const LINES = {
 };
 
 export class ShopScene extends BaseScene {
+  touchControls = false; // tap-driven menu scene: no virtual stick/buttons
   constructor() { super(); this.curve = { curvature: 0, start: 8 }; }
   build() {
     if (this.built) return; this.built = true;

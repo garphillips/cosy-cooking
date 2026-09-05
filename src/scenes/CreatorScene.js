@@ -12,6 +12,7 @@ import { audio } from '../engine/Audio.js';
 import { juice } from '../engine/Tween.js';
 
 export class CreatorScene extends BaseScene {
+  touchControls = false; // tap-driven menu scene: no virtual stick/buttons
   constructor(mode = 'creator') { super(); this.mode = mode; this.curve = { curvature: 0, start: 8 }; }
   build() {
     if (this.built) return; this.built = true;

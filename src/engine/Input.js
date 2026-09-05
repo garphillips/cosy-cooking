@@ -80,6 +80,7 @@ export class Input {
       <div class="tbtn b">💨</div>`;
     this.uiRoot.appendChild(root);
     this._touchRoot = root;
+    if (this._touchVisible === false) root.classList.add('hidden');
     const stick = root.querySelector('.stick');
     const knob = root.querySelector('.knob');
     const st = this._touch.stick;
@@ -113,7 +114,7 @@ export class Input {
     this.touchEnabled = false;
     this._touchRoot?.remove();
   }
-  setTouchVisible(v) { if (this._touchRoot) this._touchRoot.classList.toggle('hidden', !v); }
+  setTouchVisible(v) { this._touchVisible = v; if (this._touchRoot) this._touchRoot.classList.toggle('hidden', !v); }
 
   /** True if a key was pressed this frame. */
   keyPressed(code) { return this.justKeys.has(code); }
