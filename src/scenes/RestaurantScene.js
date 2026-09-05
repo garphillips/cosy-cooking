@@ -543,6 +543,7 @@ export class RestaurantScene extends WalkScene {
       if (this.input.pausePressed && !this.ui.modals.length) this.ui.pauseMenu();
     } else {
       this.player.frozen = this.input.locked || this.frozen;
+      const cp = this.camera.position, pp = this.player.position; this.player.idleFaceYaw = Math.atan2(cp.x - pp.x, cp.z - pp.z);
       this.player.update(dt, this.input, this.follow.yaw);
       this.sprout.update(dt, this.player.position, this.player.moving, this.player.facing); this._sproutOnStool(dt);
       if (!this.focused) this.follow.update(dt, this.player.position, this.player.vel);

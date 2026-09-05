@@ -73,13 +73,17 @@ h2 { font-size: 1.5em; color: var(--wood-dark); }
 /* ---------- Title ---------- */
 .title-screen {
   position: absolute; inset: 0; display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 18px;
+  align-items: center; justify-content: space-between; gap: 12px;
+  padding: 4vh 16px 3vh;
 }
+.title-screen .logo { flex: 0 0 auto; }
+.title-screen .spacer { flex: 1 1 auto; }
+.title-screen .bottom { display: flex; flex-direction: column; align-items: center; gap: 10px; }
 .title-screen .logo { text-align: center; }
 .title-screen .logo h1 { font-family: 'Borel', 'Sono', cursive; font-weight: 400; font-size: 4.2em; line-height: 1.4; padding-top: 0.25em; letter-spacing: 0; word-spacing: 0.05em; font-kerning: normal; font-variant-ligatures: common-ligatures contextual; font-feature-settings: 'liga' 1, 'calt' 1; text-rendering: optimizeLegibility; color: #fff; text-shadow: 0 4px 0 var(--wood-dark), 0 8px 20px var(--shadow); }
 .title-screen .logo p { color: #fff; font-size: 1.1em; margin: 0; text-shadow: 0 2px 0 var(--wood-dark); }
-.title-screen .menu { display: flex; flex-direction: column; gap: 10px; min-width: 240px; }
-.title-screen .btn { font-size: 1.3em; padding: 14px 30px; }
+.title-screen .menu { display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.title-screen .btn { font-size: 1.15em; padding: 12px 26px; }
 
 /* ---------- HUD ---------- */
 .hud { position: absolute; top: 14px; left: 14px; right: 14px; display: flex; justify-content: space-between; align-items: flex-start; pointer-events: none; }

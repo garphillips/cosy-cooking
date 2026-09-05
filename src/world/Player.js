@@ -8,6 +8,7 @@ export class Player {
     this.vel = new THREE.Vector3(); this.facing = 0;
     this.colliders = []; this.bounds = null; this.frozen = false;
     this.moving = false; this.stepT = 0; this.onStep = null;
+    this.idleT = 0; this.idleFaceYaw = null; // set by the scene: yaw to turn toward when idle
   }
   get position() { return this.root.position; }
   setColliders(list) { this.colliders = list; }
@@ -32,9 +33,17 @@ export class Player {
     const sp = Math.hypot(this.vel.x, this.vel.z);
     this.moving = sp > 0.3;
     if (len > 0.01) {
+      this.idleT = 0;
       const yaw = Math.atan2(dx, dz);
       let d = yaw - this.facing; while (d > Math.PI) d -= Math.PI * 2; while (d < -Math.PI) d += Math.PI * 2;
       this.facing += d * Math.min(1, dt * 12);
+    } else if (!this.frozen) {
+      this.idleT += dt;
+      // after a beat, drift round to face the camera so her face reads while she stands still
+      if (this.idleT > 1.2 && this.idleFaceYaw != null) {
+        let d = this.idleFaceYaw - this.facing; while (d > Math.PI) d -= Math.PI * 2; while (d < -Math.PI) d += Math.PI * 2;
+        this.facing += d * Math.min(1, dt * 2.5);
+      }
     }
     this.root.rotation.y = this.facing;
     this.gigi.update(dt, { moving: Math.min(1, sp / this.speed), speed: sp / this.speed });

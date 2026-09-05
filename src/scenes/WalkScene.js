@@ -37,6 +37,7 @@ export class WalkScene extends BaseScene {
   updateWalk(dt) {
     if (this.game.scenes.transitioning) { this.gigi.update(dt, { moving: 0 }); return false; }
     this.player.frozen = this.input.locked || this.frozen;
+    const cp = this.camera.position, pp = this.player.position; this.player.idleFaceYaw = Math.atan2(cp.x - pp.x, cp.z - pp.z);
     this.player.update(dt, this.input, this.follow.yaw);
     this.sprout.update(dt, this.player.position, this.player.moving, this.player.facing);
     this.follow.update(dt, this.player.position, this.player.vel);

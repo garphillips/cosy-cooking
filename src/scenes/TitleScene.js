@@ -25,7 +25,7 @@ export class TitleScene extends BaseScene {
     const b1 = makeBush(0.8); b1.position.set(2.5, 0, 1.5); this.diorama.add(b1);
     const b2 = makeBush(0.7); b2.position.set(-2.8, 0, 1.2); this.diorama.add(b2);
     this.diorama.add(scatterInstanced(60, { x: 0, z: 0, w: 9, d: 9 }, { avoid: [{ x: -0.6, z: 0.4, r: 1 }, { x: 0.9, z: 0.6, r: 1 }] }));
-    this.camera.position.set(0, 5.5, 13); this.camera.lookAt(0, 0.6, 0);
+    this.camera.position.set(0, 4.6, 12.5); this.camera.lookAt(0, 1.0, 0);
   }
   enter() {
     super.enter(); this.build();
@@ -50,10 +50,12 @@ export class TitleScene extends BaseScene {
     const vol = el('button', 'btn ghost small', this.state.settings.audio.muted ? '🔇 Sound off' : '🔊 Sound on');
     vol.onclick = () => { audio.init(); const m = audio.toggleMute(); this.state.settings.audio.muted = m; this.state.saveSettings(); vol.textContent = m ? '🔇 Sound off' : '🔊 Sound on'; };
     menu.appendChild(vol);
-    wrap.appendChild(menu);
+    const spacer = el('div', 'spacer'); wrap.appendChild(spacer);
+    const bottom = el('div', 'bottom'); wrap.appendChild(bottom);
+    bottom.appendChild(menu);
     const sch = this.game.input.scheme; const hint = el('p', 'tiny', sch === 'touch' ? 'Drag the stick to move · ✋ to interact · 💨 to hurry' : sch === 'gamepad' ? 'Left stick to move · A to interact · X to sprint · Start to pause' : 'Move: WASD / arrows · Interact: E / Space · Sprint: Shift · Esc: pause');
     hint.style.cssText = 'color:#fff;text-shadow:0 2px 0 rgba(0,0,0,0.3);margin:0';
-    wrap.appendChild(hint);
+    bottom.appendChild(hint);
     this.ui.mount(wrap);
   }
   update(dt) {
