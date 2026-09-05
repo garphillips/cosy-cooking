@@ -46,11 +46,12 @@ export function buildHat(id) {
   const c = it.color || 0xffffff;
   switch (id) {
     case 'hat_scarf_yellow': {
-      const band = torus(HEAD_R * 1.02, 0.07, c, 8, 24); band.rotation.x = Math.PI / 2 + 0.25; band.position.y = 0.16; g.add(band);
-      const knot = sphere(0.09, c); knot.position.set(0.22, HEAD_R + 0.02, 0.06); g.add(knot);
-      for (const s of [-1, 1]) { const ear = cone(0.08, 0.28, c); ear.position.set(0.22 + s * 0.13, HEAD_R + 0.12, 0.06); ear.rotation.z = s * 1.1; g.add(ear); }
-      // polka dots
-      for (let i = 0; i < 10; i++) { const a = (i / 10) * Math.PI * 2 + 0.3; const d = sphere(0.032, 0xfaf6ee, {}, 6); d.position.set(Math.cos(a) * HEAD_R * 1.09, 0.16 + Math.sin(a * 2) * 0.02 + Math.sin(a) * 0.04, Math.sin(a) * HEAD_R * 1.09 - 0.02); d.userData.noOutline = true; g.add(d); }
+      // band sits on the crown, front raised over the fringe like the reference
+      const band = torus(HEAD_R * 1.16, 0.08, c, 8, 32); band.rotation.x = Math.PI / 2 - 0.35; band.position.set(0, 0.28, -0.1); g.add(band);
+      // polka dots live in the band's own frame so they follow its tilt
+      for (let i = 0; i < 12; i++) { const a = (i / 12) * Math.PI * 2 + 0.26; const d = sphere(0.03, 0xfaf6ee, {}, 6); d.position.set(Math.cos(a) * HEAD_R * 1.16, Math.sin(a) * HEAD_R * 1.16, 0.055); d.userData.noOutline = true; band.add(d); }
+      const knot = sphere(0.09, c); knot.position.set(0.3, HEAD_R * 1.0, 0.16); g.add(knot);
+      for (const s of [-1, 1]) { const ear = cone(0.08, 0.28, c); ear.position.set(0.3 + s * 0.13, HEAD_R * 1.0 + 0.1, 0.16); ear.rotation.z = s * 1.1; g.add(ear); }
       break;
     }
     case 'hat_straw': { const brim = cylinder(0.75, 0.75, 0.05, c); brim.position.y = 0.28; g.add(brim); const top = cylinder(0.36, 0.4, 0.28, c); top.position.y = 0.42; g.add(top); const rib = torus(0.4, 0.03, 0xd9603a); rib.rotation.x = Math.PI / 2; rib.position.y = 0.3; g.add(rib); break; }

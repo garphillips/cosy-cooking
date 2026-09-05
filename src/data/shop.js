@@ -13,7 +13,7 @@ export const ITEMS = {
 
   // ---- Headwear ----
   hat_none:        { name: 'No Headwear',  slot: 'hat', price: 0, starter: true, icon: '🚫' },
-  hat_scarf_yellow:{ name: 'Polka-dot Headscarf', slot: 'hat', price: 0, starter: true, icon: '🎀', color: 0xf2c94c },
+  hat_scarf_yellow:{ name: 'Polka-dot Headscarf', slot: 'hat', price: 0, starter: true, icon: '🎀', color: 0xf0b32e },
   hat_straw:       { name: 'Straw Hat',    slot: 'hat', price: 150, icon: '👒', color: 0xe6c988 },
   hat_beret:       { name: 'Red Beret',    slot: 'hat', price: 180, icon: '🧢', color: 0xc84a3a },
   hat_flowers:     { name: 'Flower Crown', slot: 'hat', price: 220, icon: '🌼', color: 0xf0a3c0 },
