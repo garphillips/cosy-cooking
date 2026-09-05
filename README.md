@@ -67,7 +67,7 @@ plum_tart: { name: 'Plum Tart', icon: '🥧', price: 140, known: false,
 Unknown recipes are discovered by Freestyle (any matching multiset) or by a recipe card in the shop (`ITEMS.recipe_*` with `recipe: 'plum_tart'`).
 
 ### A new shop item
-Add to `src/data/shop.js`. Cosmetics need a `slot` (hair | hat | top | bottom | shoes | accessory | cat) and a builder case in `src/world/characters/cosmetics.js` (fall-through defaults exist for tops, bottoms and shoes by colour). Upgrades use `effect: { basket: 10 }` or `{ tables: 4 }`; decor uses `decor: 'pot' | 'curtains' | 'tablecloth' | 'wallart' | 'chalkboard'` and is applied in `RestaurantScene._applyDecor`.
+Add to `src/data/shop.js`. Cosmetics need a `slot` (hair | hat | top | bottom | shoes | accessory | cat) and a builder case in `src/world/characters/cosmetics.js` (fall-through defaults exist for tops, bottoms and shoes by colour). Upgrades use `effect: { basket: 25 }` or `{ tables: 4 }`; decor uses `decor: 'pot' | 'curtains' | 'tablecloth' | 'wallart' | 'chalkboard'` and is applied in `RestaurantScene._applyDecor`.
 
 ### A new regular
 Add to `src/data/regulars.js` and a headgear case in `Customer._build`.

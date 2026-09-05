@@ -6,7 +6,7 @@ Gather (garden / meadow) → carry → cook & serve (The Little Sprout) → Cosy
 ## Economy (src/data/economy.js)
 | Tunable | Value | Why |
 | --- | --- | --- |
-| startingBasket | 8 | Two full recipes per trip early on |
+| startingBasket | 20 | Several full recipes per trip |
 | tipMax | 0.60 | Tip = price × 0.6 × quality |
 | hintTipScale | 0.85 | Vague-hint match pays a slightly smaller tip |
 | specialPriceScale | 0.85 | Counter specials sell for 85% price (tip unaffected) |

@@ -60,6 +60,11 @@ class GameState {
     this.game = { ...d, ...g, stats: { ...d.stats, ...(g.stats || {}) }, equipped: { ...d.equipped, ...(g.equipped || {}) }, look: { ...d.look, ...(g.look || {}) } };
     // Ensure starter items are always owned (in case new starters are added later)
     for (const id of STARTER_ITEMS) if (!this.game.owned.includes(id)) this.game.owned.push(id);
+    // Older saves stored a smaller starting basket; never let capacity fall below the current default
+    // or below what an owned upgrade grants.
+    let cap = Math.max(this.game.basketCapacity || 0, ECONOMY.startingBasket);
+    for (const id of this.game.owned) { const b = ITEMS[id]?.effect?.basket; if (b) cap = Math.max(cap, b); }
+    this.game.basketCapacity = cap;
     return true;
   }
   save() { Save.saveGame(this.game); this.emit('save'); }

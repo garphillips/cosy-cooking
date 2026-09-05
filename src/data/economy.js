@@ -1,7 +1,7 @@
 // Economy & scoring tunables. Everything that affects how many Cosy Points the player earns.
 export const ECONOMY = {
   startingCP: 0,
-  startingBasket: 8,
+  startingBasket: 20,
   startingTables: 3,
   tipMax: 0.6,                // tip is 0..60% of menu price scaled by cooking quality
   hintTipScale: 0.85,         // vague-hint match gets 85% of the tip

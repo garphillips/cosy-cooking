@@ -78,8 +78,8 @@ export const ITEMS = {
   cat_hat:         { name: 'Tiny Hat',     slot: 'cat', price: 300, icon: '🎩', color: 0x4a3a6a },
 
   // ---- Upgrades ----
-  basket_1:        { name: 'Bigger Basket (10)', slot: 'upgrade', price: 250, icon: '🧺', desc: 'Basket holds 10 ingredients.', effect: { basket: 10 } },
-  basket_2:        { name: 'Biggest Basket (12)', slot: 'upgrade', price: 500, icon: '🧺', desc: 'Basket holds 12 ingredients.', effect: { basket: 12 }, requires: 'basket_1' },
+  basket_1:        { name: 'Bigger Basket (25)', slot: 'upgrade', price: 250, icon: '🧺', desc: 'Basket holds 25 ingredients.', effect: { basket: 25 } },
+  basket_2:        { name: 'Biggest Basket (30)', slot: 'upgrade', price: 500, icon: '🧺', desc: 'Basket holds 30 ingredients.', effect: { basket: 30 }, requires: 'basket_1' },
   fourth_table:    { name: 'Fourth Table',  slot: 'upgrade', price: 600, icon: '🪑', desc: 'One more regular can be seated per visit.', effect: { tables: 4 } },
 
   // ---- Recipe cards ----
