@@ -6,13 +6,15 @@
   "scripts": {
     "dev": "vite --port 5179 --strictPort",
     "build": "vite build",
-    "preview": "vite preview --port 4173"
+    "preview": "vite preview --port 4173",
+    "deploy": "npm run build && wrangler pages deploy dist --project-name cosy-cooking --commit-dirty=true"
   },
   "dependencies": {
     "three": "^0.185.1"
   },
   "devDependencies": {
     "vite": "^6.4.3",
-    "vite-plugin-singlefile": "^2.3.3"
+    "vite-plugin-singlefile": "^2.3.3",
+    "wrangler": "^4.86.0"
   }
 }
