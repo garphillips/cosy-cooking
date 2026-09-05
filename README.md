@@ -40,7 +40,7 @@ src/engine/                Game loop, SceneManager, Input, Tween/juice, Audio sy
 src/game/State.js          the save-game model: CP, inventory, owned items, recipes, friendship, day
 src/game/minigames.js      the eight cooking micro-games (chop, peel, whisk, pour, season, stir, heat, flip)
 src/data/                  ALL balancing data (see below)
-src/world/                 materials.js (makeToyMaterial), curve.js (curved-horizon shader), props.js, textures.js
+src/world/                 materials.js (makeToyMaterial), curve.js (curved-horizon + toon/outline shader patches), toon.js, outline.js, faces.js, props.js, textures.js
 src/world/characters/      Gigi (modular rig with sockets), Sprout, Customer, cosmetics builders
 src/scenes/                Title, Creator/Wardrobe, Hub, Garden (+meadow), Restaurant, Shop
 src/ui/                    UI.js (HUD, prompt, toasts, modals, pause, gamepad menu nav), Book.js, DressUp.js
@@ -71,6 +71,10 @@ Add to `src/data/shop.js`. Cosmetics need a `slot` (hair | hat | top | bottom | 
 
 ### A new regular
 Add to `src/data/regulars.js` and a headgear case in `Customer._build`.
+
+## Character style
+
+Characters use a soft-toon shading patch, inverted-hull outlines and canvas-drawn faces. Switch between **Cartoon** and **Classic** in the pause menu; the choice is saved with the device settings. See DESIGN.md for the tunables.
 
 ## Saving
 

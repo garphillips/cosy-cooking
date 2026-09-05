@@ -1,5 +1,6 @@
 // DOM overlay UI: HUD, floating interact prompt, toasts, modals, pause menu.
 import { audio } from '../engine/Audio.js';
+import { setCharacterStyle } from '../world/toon.js';
 
 const ICONS = { door: '🚪', gate: '🌿', shop: '🛍️', restaurant: '🍲', wardrobe: '👗', pet: '🐾', pick: '✋', pull: '💪', shake: '🌳', forage: '🔍', talk: '💬', cook: '🍳', open: '🔔', close: '🔔', leave: '🏡', book: '📖', basket: '🧺', meadow: '🌼', bed: '🛏️' };
 
@@ -160,6 +161,8 @@ export class UI {
     mk('Control scheme', controls).onchange = () => { s.controls = controls.value; this.state.saveSettings(); this.applyControlScheme(); };
     const gfx = el('select'); [['auto', 'Auto'], ['high', 'Fancy (bloom, shadows, AO)'], ['low', 'Simple (fast)']].forEach(([v, n]) => { const op = el('option', null, n); op.value = v; if ((s.graphics || 'auto') === v) op.selected = true; gfx.appendChild(op); });
     mk('Graphics', gfx).onchange = () => { s.graphics = gfx.value; this.state.saveSettings(); };
+    const cs = el('select'); [['cartoon', 'Cartoon (soft toon + outlines)'], ['classic', 'Classic']].forEach(([v, n]) => { const op = el('option', null, n); op.value = v; if ((s.characterStyle || 'cartoon') === v) op.selected = true; cs.appendChild(op); });
+    mk('Character style', cs).onchange = () => { s.characterStyle = cs.value; this.state.saveSettings(); setCharacterStyle(cs.value); };
     mk('Hold instead of tapping (rhythm inputs)', check(s.holdToTap)).onchange = (e) => { s.holdToTap = e.target.checked; this.state.saveSettings(); };
     mk('Reduced motion', check(s.reducedMotion)).onchange = (e) => { s.reducedMotion = e.target.checked; this.state.saveSettings(); this._applySettingsClasses(); };
     mk('Larger text', check(s.largeText)).onchange = (e) => { s.largeText = e.target.checked; this.state.saveSettings(); document.documentElement.style.setProperty('--ui-scale', e.target.checked ? '1.2' : '1'); };

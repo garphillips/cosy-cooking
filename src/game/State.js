@@ -39,6 +39,7 @@ function defaultSettings() {
     controls: 'auto',           // 'auto' | 'keyboard' | 'touch'
     largeText: false,
     graphics: 'auto',           // 'auto' | 'high' | 'low'
+    characterStyle: 'cartoon',  // 'cartoon' (soft toon + outlines) | 'classic'
   };
 }
 

@@ -11,6 +11,8 @@ import { el } from '../ui/UI.js';
 import { ITEMS, COSMETIC_SLOTS, DEFAULT_EQUIPPED, newTodayItems } from '../data/shop.js';
 import { audio } from '../engine/Audio.js';
 import { juice, tweens, Ease } from '../engine/Tween.js';
+import { FaceDecal } from '../world/faces.js';
+import { applyCharacterStyle } from '../world/toon.js';
 
 const LINES = {
   welcome: ['Welcome, dear! Try anything on.', 'Ooh, new season, new looks!', 'Sprout! Come for a scratch behind the ears?'],
@@ -117,9 +119,10 @@ function makeShopkeeper() {
   const head = sphere(0.36, PALETTE.skin[1], {}, 18); head.position.y = 1.9; g.add(head);
   const hair = sphere(0.38, 0xdedede); hair.scale.set(1, 0.7, 1); hair.position.set(0, 2.05, -0.05); g.add(hair);
   const bun = sphere(0.15, 0xdedede); bun.position.set(0, 2.32, -0.15); g.add(bun);
-  for (const s of [-1, 1]) { const eye = sphere(0.05, 0x3a2a1a, {}, 8); eye.position.set(s * 0.13, 1.92, 0.33); g.add(eye); const rim = new THREE.Mesh(new THREE.TorusGeometry(0.09, 0.015, 6, 14), skirt.material.clone()); rim.material.color.setHex(0x4a3420); rim.position.set(s * 0.14, 1.92, 0.35); g.add(rim); const cheek = sphere(0.06, 0xf0a3c0, {}, 8); cheek.position.set(s * 0.24, 1.8, 0.28); cheek.scale.set(1, 0.6, 0.4); g.add(cheek); }
-  const mouth = box(0.1, 0.03, 0.02, 0xc84a3a); mouth.position.set(0, 1.76, 0.36); g.add(mouth);
+  const face = new FaceDecal({ kind: 'npc', radius: 0.36, eyeColor: 0x4a8a5a, blush: 0.4 }); face.mesh.position.y = 1.9; g.add(face.mesh); face.setExpression('happy');
+  for (const s of [-1, 1]) { const rim = new THREE.Mesh(new THREE.TorusGeometry(0.1, 0.015, 6, 14), skirt.material.clone()); rim.material.color.setHex(0x4a3420); rim.position.set(s * 0.13, 1.92, 0.36); g.add(rim); }
   for (const s of [-1, 1]) { const arm = capsule(0.07, 0.2, 0xf6efe2); arm.position.set(s * 0.36, 1.1, 0.1); arm.rotation.z = s * 0.4; g.add(arm); const hand = sphere(0.07, PALETTE.skin[1], {}, 8); hand.position.set(s * 0.44, 0.9, 0.15); g.add(hand); }
-  let t = 0; g.userData.update = (dt) => { t += dt; head.position.y = 1.9 + Math.sin(t * 2) * 0.01; head.rotation.z = Math.sin(t * 1.3) * 0.04; g.rotation.y = Math.sin(t * 0.5) * 0.1; };
+  applyCharacterStyle(g);
+  let t = 0; g.userData.update = (dt) => { t += dt; face.update(dt); head.position.y = 1.9 + Math.sin(t * 2) * 0.01; head.rotation.z = Math.sin(t * 1.3) * 0.04; g.rotation.y = Math.sin(t * 0.5) * 0.1; };
   return g;
 }

@@ -4,6 +4,8 @@ import { sphere, capsule, cylinder, cone, box, makeIconSprite } from '../props.j
 import { PALETTE } from '../materials.js';
 import { REGULARS } from '../../data/regulars.js';
 import { tweens, Ease } from '../../engine/Tween.js';
+import { FaceDecal } from '../faces.js';
+import { applyCharacterStyle, releaseCharacterStyle } from '../toon.js';
 
 export class Customer {
   constructor(regularId) {
@@ -27,9 +29,10 @@ export class Customer {
     this.armR = new THREE.Group(); this.armR.position.set(0.3, 1.15, 0); this.body.add(this.armR);
     for (const arm of [this.armL, this.armR]) { const s = capsule(0.075, 0.18, c); s.position.y = -0.14; arm.add(s); const h = sphere(0.075, skin, {}, 8); h.position.y = -0.34; arm.add(h); }
     this.head = new THREE.Group(); this.head.position.y = 1.7; this.body.add(this.head);
-    const hm = sphere(0.36, skin, {}, 18); this.head.add(hm);
-    for (const s of [-1, 1]) { const eye = sphere(0.05, 0x3a2a1a, {}, 8); eye.position.set(s * 0.13, 0.02, 0.33); eye.scale.set(1, 1.3, 0.6); this.head.add(eye); }
-    const mouth = box(0.08, 0.025, 0.02, 0xc84a3a); mouth.position.set(0, -0.14, 0.35); this.head.add(mouth); this.mouth = mouth;
+    const hm = sphere(0.36, skin, {}, 24); hm.scale.set(1, 1.03, 0.98); this.head.add(hm);
+    this.face = new FaceDecal({ kind: 'npc', radius: 0.36, eyeColor: [0x6b4423, 0x3b6a9a, 0x4a8a5a, 0x3a3a3a, 0x7a5aa0, 0x6b4423][Object.keys(REGULARS).indexOf(this.id) % 6], blush: this.id === 'pip' ? 0.7 : 0.45 });
+    this.face.mesh.scale.copy(hm.scale); this.head.add(this.face.mesh);
+    this.mouth = { scale: new THREE.Vector3(1, 1, 1) };
     // distinguishing headgear
     switch (this.id) {
       case 'bertie': { const hat = cylinder(0.3, 0.32, 0.24, 0xfaf6ee); hat.position.y = 0.42; this.head.add(hat); const puff = sphere(0.34, 0xfaf6ee); puff.scale.set(1, 0.6, 1); puff.position.y = 0.62; this.head.add(puff); const tash = box(0.22, 0.05, 0.05, 0x8b5a2b); tash.position.set(0, -0.08, 0.35); this.head.add(tash); break; }
@@ -45,6 +48,7 @@ export class Customer {
     this.bubble = new THREE.Sprite(new THREE.SpriteMaterial({ transparent: true, depthWrite: false })); this.bubble.position.y = 2.75 * scale; this.bubble.visible = false; this.root.add(this.bubble);
     this.emote = makeIconSprite('💛'); this.emote.position.y = 2.6 * scale; this.emote.scale.set(0.6, 0.6, 1); this.emote.visible = false; this.root.add(this.emote);
     this.height = 2.1 * scale;
+    applyCharacterStyle(this.root);
   }
 
   /** Speech bubble: `{ icon, text }` or null to hide. */
@@ -72,6 +76,7 @@ export class Customer {
   }
 
   react(emoji) {
+    this._expr = ['🤩', '😊', '💛', '💗', '🎁', '😋', '👋'].includes(emoji) ? 'happy' : emoji === '🙂' ? 'neutral' : 'surprised'; tweens.timer(() => { this._expr = null; }, 1.8);
     const c = document.createElement('canvas'); c.width = 96; c.height = 96; const ctx = c.getContext('2d'); ctx.font = '76px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(emoji, 48, 52);
     if (this.emote.material.map) this.emote.material.map.dispose();
     const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; this.emote.material.map = tex; this.emote.material.needsUpdate = true;
@@ -108,7 +113,8 @@ export class Customer {
   }
 
   update(dt) {
-    this.t += dt;
+    this.t += dt; this.face.update(dt);
+    this.face.setExpression(this.eating ? 'happy' : this._expr || 'neutral');
     if (this._path) {
       const P = this._path; const target = P.points[P.i]; const p = this.root.position;
       const dx = target.x - p.x, dz = target.z - p.z; const d = Math.hypot(dx, dz);
@@ -120,8 +126,8 @@ export class Customer {
     const w = this.t * 9;
     if (this.moving) { this.legL.rotation.x = Math.sin(w) * 0.7; this.legR.rotation.x = -Math.sin(w) * 0.7; this.armL.rotation.x = -Math.sin(w) * 0.5; this.armR.rotation.x = Math.sin(w) * 0.5; this.body.position.y = Math.abs(Math.sin(w)) * 0.05; }
     else if (!this.seated) { this.legL.rotation.x = 0; this.legR.rotation.x = 0; this.armL.rotation.x = 0; this.armR.rotation.x = 0; this.body.position.y = Math.sin(this.t * 2) * 0.01; }
-    if (this.eating) { this.armR.rotation.x = -1.3 + Math.sin(this.t * 8) * 0.4; this.head.rotation.x = Math.sin(this.t * 8) * 0.08; this.mouth.scale.set(1.4, 1.6, 1); }
-    else if (this.seated) { this.armR.rotation.x = -0.6; this.armL.rotation.x = -0.6; this.head.rotation.x = 0; this.mouth.scale.set(1, 1, 1); this.head.rotation.y = Math.sin(this.t * 0.7) * 0.15; }
+    if (this.eating) { this.armR.rotation.x = -1.3 + Math.sin(this.t * 8) * 0.4; this.head.rotation.x = Math.sin(this.t * 8) * 0.08; }
+    else if (this.seated) { this.armR.rotation.x = -0.6; this.armL.rotation.x = -0.6; this.head.rotation.x = 0; this.head.rotation.y = Math.sin(this.t * 0.7) * 0.15; }
   }
 }
 function rr(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }

@@ -52,6 +52,15 @@ Each returns 0..1. Star thresholds: ≥ 0.85 ★★★, ≥ 0.55 ★★.
 - Materials: MeshStandard roughness 0.62, shared/cached by option key; all boxes are RoundedBoxGeometry.
 - Palette from the reference: walnut 6b4423, honey c08a4c, plaster f6e9cc, sage 82a86c, tomato e0603a, butter f6cc4a, sky 9fd0ee, cat grey 8d93a1.
 
+## Cartoon character pass (src/world/toon.js, outline.js, faces.js)
+- **Soft-toon shading**: `applyCurve(material, { toon: true })` wraps N·L for the *diffuse* term only (`toonNL = mix(shadow, 1, smoothstep(edge±soft, N·L*0.5+0.5))`) with a warm lit / cool shadow tint. Specular keeps the classic saturate(N·L), otherwise back-facing lights reach the GGX term and blow up at silhouettes. Uniforms: `TOON_UNIFORMS` (shadow 0.3, edge 0.52, soft 0.18). `uToonMix` 0..1 blends to classic PBR at runtime.
+- **Outlines**: inverted hulls (`addOutlines`) — back-face copies pushed along normals by `OUTLINE_UNIFORMS.uOutline` (0.026 m), tinted a darkened base colour. Skipped for parts under 3.5 cm, transparent parts, decals and anything flagged `noOutline`.
+- **Faces**: `FaceDecal` draws eyes/brows/blush/mouth on a 512×384 canvas mapped to a transparent partial-sphere shell (140° wide) over the head; skin shading shows through. Expressions: neutral / happy / surprised / joy; blinks every 2–5 s. `kind`: gigi | npc | cat.
+- **Proportions**: HEAD_R 0.47 (was 0.42), legs 0.42 pivot, torso socket 0.8, arms 0.98. ~2.1 heads tall.
+- **Secondary motion**: hair/hat sockets spring off root velocity; Sprout's tail and ears spring off acceleration and reactions.
+- **Toggle**: pause menu → Character style → Cartoon / Classic (`settings.characterStyle`). Classic sets `uToonMix = 0` and hides hulls; faces and proportions stay.
+- **Revert**: `git checkout pre-cartoon -- . && npm run build` restores the pre-pass build exactly.
+
 ## Decisions & deviations from the brief
 - **Pick quality** uses a visible ripeness pulse (time your hold) so every gathering type has a light skill element, rather than a pure hold.
 - **Meadow unlock** is lifetime-earned CP so spending never re-locks it.

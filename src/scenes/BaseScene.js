@@ -38,6 +38,9 @@ export class BaseScene {
     dir.shadow.bias = -0.0008; dir.shadow.normalBias = 0.02;
     this.three.add(dir); this.three.add(dir.target);
     this.sun = dir; this.hemi = hemi;
+    // soft character fill that rides with the camera
+    this.three.add(this.camera);
+    const fill = new THREE.PointLight(0xfff0e0, 1.2, 30, 2); fill.position.set(1.5, 0.5, 1.5); fill.castShadow = false; this.camera.add(fill); this.fill = fill;
     return { hemi, dir };
   }
 

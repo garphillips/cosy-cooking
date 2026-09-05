@@ -70,3 +70,15 @@ export function makeClouds(count = 7, { radius = 60, height = 22, seed = 4 } = {
   return g;
 }
 function rr(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+
+/** Tabby stripes for Sprout: grey base with soft darker bands across u. */
+export function stripeTexture(base = 0x8d93a1, dark = 0x5f6570, bands = 5) {
+  return canvasTex(`stripes:${base}:${dark}:${bands}`, 256, 128, (ctx, w, h) => {
+    ctx.fillStyle = hex(base); ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = hex(dark);
+    for (let i = 0; i < bands; i++) { const x = (i + 0.5) * (w / bands); ctx.globalAlpha = 0.85; ctx.beginPath(); ctx.moveTo(x - 9, 0); ctx.quadraticCurveTo(x + 6, h * 0.5, x - 9, h); ctx.lineTo(x + 9, h); ctx.quadraticCurveTo(x + 24, h * 0.5, x + 9, 0); ctx.closePath(); ctx.fill(); }
+    ctx.globalAlpha = 1;
+    // lighter belly band along the bottom
+    const g = ctx.createLinearGradient(0, h * 0.6, 0, h); g.addColorStop(0, 'rgba(230,230,235,0)'); g.addColorStop(1, 'rgba(235,235,240,0.7)'); ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+  }, { repeat: 1 });
+}

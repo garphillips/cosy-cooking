@@ -6,7 +6,7 @@ import { PALETTE } from '../materials.js';
 import { makeToyMaterial } from '../materials.js';
 import { ITEMS } from '../../data/shop.js';
 
-const HEAD_R = 0.42;
+export const HEAD_R = 0.47;
 
 function torus(r, tube, color, seg = 10, tseg = 20) {
   const m = new THREE.Mesh(new THREE.TorusGeometry(r, tube, seg, tseg), makeToyMaterial({ color })); m.castShadow = true; return m;
@@ -15,20 +15,26 @@ function torus(r, tube, color, seg = 10, tseg = 20) {
 // ---------- Hair ----------
 export function buildHair(id, hairColor) {
   const g = new THREE.Group();
-  const c = hairColor;
-  // base cap shared by all styles
-  const cap = sphere(HEAD_R * 1.04, c); cap.scale.set(1, 0.95, 1); cap.position.y = 0.04; g.add(cap);
-  const frontMask = sphere(HEAD_R * 0.9, 0x000000, { transparent: true, opacity: 0 }); // placeholder to keep face visible (no-op)
-  frontMask.visible = false; g.add(frontMask);
-  // fringe: small spheres along the brow
-  for (let i = -2; i <= 2; i++) { const f = sphere(0.11, c, {}, 8); f.position.set(i * 0.14, 0.12, HEAD_R * 0.86); g.add(f); }
+  const c = hairColor; const hi = new THREE.Color(c).multiplyScalar(1.14).getHex();
+  // chunky cap: a little bigger than the head, pulled back so the face stays clear
+  const cap = sphere(HEAD_R * 1.08, c); cap.scale.set(1, 0.96, 1.0); cap.position.set(0, 0.09, -0.13); g.add(cap);
+  // glossy highlight band near the crown
+  const gloss = sphere(HEAD_R * 0.62, hi); gloss.scale.set(1.25, 0.32, 0.9); gloss.position.set(0.08, HEAD_R * 0.78, HEAD_R * 0.2); gloss.castShadow = false; g.add(gloss);
+  // fringe: four chunky pointed strands sweeping down over the brow
+  // fringe: chunky soft bangs draped over the brow line
+  const strands = [[-0.62, 0.38, 0.7, 0.5], [-0.22, 0.44, 0.84, 0.15], [0.2, 0.44, 0.84, -0.15], [0.62, 0.38, 0.7, -0.5]];
+  strands.forEach(([x, y, z, rz]) => {
+    const st = sphere(0.13, c, {}, 12); st.scale.set(1.0, 1.3, 0.7); st.position.set(x * HEAD_R, y, z * HEAD_R); st.rotation.set(0.25, 0, rz); g.add(st);
+  });
+  // side locks in front of the ears
+  for (const sx of [-1, 1]) { const lock = capsule(0.085, 0.16, c); lock.position.set(sx * HEAD_R * 0.98, -0.08, 0.16); lock.rotation.z = sx * 0.1; g.add(lock); }
   switch (id) {
-    case 'hair_bun': { const bun = sphere(0.19, c); bun.position.set(0, HEAD_R + 0.08, -0.12); g.add(bun); break; }
-    case 'hair_ponytail': { const p = capsule(0.11, 0.35, c); p.position.set(0, 0.05, -HEAD_R - 0.06); p.rotation.x = 0.5; g.add(p); const band = torus(0.12, 0.03, 0xd9603a); band.position.set(0, 0.22, -HEAD_R - 0.02); band.rotation.x = 1.1; g.add(band); break; }
-    case 'hair_braids': { for (const sx of [-1, 1]) { const b = capsule(0.09, 0.42, c); b.position.set(sx * (HEAD_R + 0.02), -0.28, 0.05); g.add(b); const tie = torus(0.09, 0.025, 0xd9603a); tie.position.set(sx * (HEAD_R + 0.02), -0.5, 0.05); tie.rotation.x = Math.PI / 2; g.add(tie); } break; }
-    case 'hair_bob': { const b = sphere(HEAD_R * 1.08, c); b.scale.set(1, 0.9, 1); b.position.set(0, -0.08, -0.06); g.add(b); break; }
-    case 'hair_long': { const b = sphere(HEAD_R * 1.08, c); b.scale.set(1, 0.9, 1); b.position.set(0, -0.08, -0.06); g.add(b); const back = box(0.62, 0.7, 0.22, c); back.position.set(0, -0.5, -0.32); g.add(back); break; }
-    case 'hair_curls': { for (let i = 0; i < 9; i++) { const a = (i / 9) * Math.PI * 2; const s = sphere(0.14, c, {}, 8); s.position.set(Math.cos(a) * HEAD_R * 0.95, 0.12 + Math.sin(i) * 0.06, Math.sin(a) * HEAD_R * 0.95); g.add(s); } break; }
+    case 'hair_bun': { const bun = sphere(0.22, c); bun.position.set(0, HEAD_R + 0.1, -0.16); bun.userData.topStrand = true; g.add(bun); const bunHi = sphere(0.1, hi); bunHi.scale.set(1.2, 0.5, 0.8); bunHi.position.set(0.04, HEAD_R + 0.27, -0.1); bunHi.userData.topStrand = true; g.add(bunHi); break; }
+    case 'hair_ponytail': { const p = capsule(0.13, 0.4, c); p.position.set(0, 0.0, -HEAD_R - 0.1); p.rotation.x = 0.55; g.add(p); const tip = cone(0.1, 0.2, c); tip.position.set(0, -0.32, -HEAD_R - 0.28); tip.rotation.x = Math.PI + 0.5; g.add(tip); const band = torus(0.13, 0.035, 0xd9603a); band.position.set(0, 0.22, -HEAD_R - 0.02); band.rotation.x = 1.1; g.add(band); break; }
+    case 'hair_braids': { for (const sx of [-1, 1]) { const b = capsule(0.1, 0.46, c); b.position.set(sx * (HEAD_R + 0.04), -0.34, 0.06); g.add(b); for (let k = 0; k < 3; k++) { const bead = sphere(0.1, c); bead.position.set(sx * (HEAD_R + 0.04) + sx * 0.02 * (k % 2), -0.2 - k * 0.15, 0.06); g.add(bead); } const tie = torus(0.1, 0.03, 0xd9603a); tie.position.set(sx * (HEAD_R + 0.04), -0.58, 0.06); tie.rotation.x = Math.PI / 2; g.add(tie); const tip = cone(0.07, 0.14, c); tip.position.set(sx * (HEAD_R + 0.04), -0.7, 0.06); tip.rotation.x = Math.PI; g.add(tip); } break; }
+    case 'hair_bob': { const b = sphere(HEAD_R * 1.12, c); b.scale.set(1, 0.92, 0.95); b.position.set(0, -0.1, -0.16); g.add(b); for (const sx of [-1, 1]) { const flick = cone(0.11, 0.2, c); flick.position.set(sx * HEAD_R * 1.02, -0.42, 0.1); flick.rotation.set(0.3, 0, sx * 2.6); g.add(flick); } break; }
+    case 'hair_long': { const b = sphere(HEAD_R * 1.12, c); b.scale.set(1, 0.92, 0.95); b.position.set(0, -0.1, -0.16); g.add(b); const back = capsule(0.34, 0.5, c); back.scale.set(1, 1, 0.55); back.position.set(0, -0.62, -0.28); g.add(back); const tipL = cone(0.12, 0.22, c); tipL.position.set(-0.22, -1.0, -0.28); tipL.rotation.x = Math.PI; g.add(tipL); const tipR = cone(0.12, 0.22, c); tipR.position.set(0.22, -1.0, -0.28); tipR.rotation.x = Math.PI; g.add(tipR); break; }
+    case 'hair_curls': { for (let i = 0; i < 11; i++) { const a = (i / 11) * Math.PI * 2; const r = HEAD_R * (0.98 + (i % 2) * 0.12); const s = sphere(0.16, i % 3 === 0 ? hi : c, {}, 10); s.position.set(Math.cos(a) * r, 0.14 + Math.sin(i * 1.7) * 0.08, Math.sin(a) * r - 0.04); s.userData.topStrand = false; g.add(s); } break; }
   }
   return g;
 }
@@ -44,7 +50,7 @@ export function buildHat(id) {
       const knot = sphere(0.09, c); knot.position.set(0.22, HEAD_R + 0.02, 0.06); g.add(knot);
       for (const s of [-1, 1]) { const ear = cone(0.08, 0.28, c); ear.position.set(0.22 + s * 0.13, HEAD_R + 0.12, 0.06); ear.rotation.z = s * 1.1; g.add(ear); }
       // polka dots
-      for (let i = 0; i < 8; i++) { const a = (i / 8) * Math.PI * 2; const d = sphere(0.025, 0xfaf6ee, {}, 6); d.position.set(Math.cos(a) * HEAD_R * 1.08, 0.16 + Math.sin(a) * 0.02, Math.sin(a) * HEAD_R * 1.08 - 0.02); g.add(d); }
+      for (let i = 0; i < 10; i++) { const a = (i / 10) * Math.PI * 2 + 0.3; const d = sphere(0.032, 0xfaf6ee, {}, 6); d.position.set(Math.cos(a) * HEAD_R * 1.09, 0.16 + Math.sin(a * 2) * 0.02 + Math.sin(a) * 0.04, Math.sin(a) * HEAD_R * 1.09 - 0.02); d.userData.noOutline = true; g.add(d); }
       break;
     }
     case 'hat_straw': { const brim = cylinder(0.75, 0.75, 0.05, c); brim.position.y = 0.28; g.add(brim); const top = cylinder(0.36, 0.4, 0.28, c); top.position.y = 0.42; g.add(top); const rib = torus(0.4, 0.03, 0xd9603a); rib.rotation.x = Math.PI / 2; rib.position.y = 0.3; g.add(rib); break; }
