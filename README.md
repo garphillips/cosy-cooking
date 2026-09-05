@@ -6,7 +6,7 @@ Built with [Three.js](https://threejs.org/) and vanilla JavaScript. Every 3D ass
 
 ## Play it
 
-The built game is a single file: `dist/index.html`. Double-click it (it runs from `file://`) or host it on any static server. Google Fonts are loaded if online and fall back to system fonts offline.
+The built game is a single file: `dist/index.html`. Double-click it (it runs from `file://`) or host it on any static server. Google Fonts (Borel for the logo, Sono for display text, Nunito for body text) are loaded if online and fall back to system fonts offline.
 
 ## Develop
 
