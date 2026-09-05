@@ -1,6 +1,7 @@
 // Canvas-drawn cartoon faces mapped onto a transparent shell over a character's head.
 // Skin shading shows through; only the features are opaque so eyes stay crisp in any light.
 import * as THREE from 'three';
+import { applyCurve } from './curve.js';
 
 const W = 512, H = 384;
 
@@ -16,8 +17,10 @@ export class FaceDecal {
     this.ctx = this.canvas.getContext('2d');
     this.texture = new THREE.CanvasTexture(this.canvas); this.texture.colorSpace = THREE.SRGBColorSpace; this.texture.anisotropy = 4;
     const phiLen = 2.45, thetaStart = 0.62, thetaLen = 1.7;
-    const geo = new THREE.SphereGeometry(radius * 1.012, 32, 24, Math.PI / 2 - phiLen / 2, phiLen, thetaStart, thetaLen);
+    // 3% off the head: enough depth margin at play distance (a 1.2% shell z-fought the head at ~13 m)
+    const geo = new THREE.SphereGeometry(radius * 1.03, 32, 24, Math.PI / 2 - phiLen / 2, phiLen, thetaStart, thetaLen);
     const mat = new THREE.MeshBasicMaterial({ map: this.texture, transparent: true, depthWrite: false, toneMapped: false, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 });
+    applyCurve(mat); // must bend with the head under the curved-horizon shader, or it sinks into it at distance
     this.mesh = new THREE.Mesh(geo, mat); this.mesh.userData.decal = true; this.mesh.castShadow = false; this.mesh.receiveShadow = false; this.mesh.renderOrder = 2;
     this.mesh.rotation.y = faceForward;
     this.draw();
@@ -54,17 +57,17 @@ export class FaceDecal {
         // sclera
         ctx.fillStyle = '#fffaf2'; ctx.beginPath(); ctx.ellipse(cx, cy, eyeW, eyeH, 0, 0, Math.PI * 2); ctx.fill();
         // iris with vertical gradient
-        const irisR = eyeW * 0.78; const ig = ctx.createLinearGradient(0, cy - irisR, 0, cy + irisR);
+        const irisR = eyeW * 0.88; const ig = ctx.createLinearGradient(0, cy - irisR, 0, cy + irisR);
         ig.addColorStop(0, shade(eyeHex, 0.55)); ig.addColorStop(0.55, eyeHex); ig.addColorStop(1, shade(eyeHex, 1.35));
         ctx.fillStyle = ig; ctx.beginPath(); ctx.ellipse(cx, cy + 4, irisR, irisR * 1.15, 0, 0, Math.PI * 2); ctx.fill();
         // pupil
-        const pr = this.expression === 'surprised' ? irisR * 0.62 : irisR * 0.48;
+        const pr = this.expression === 'surprised' ? irisR * 0.62 : irisR * 0.52;
         ctx.fillStyle = '#1e1410'; ctx.beginPath(); ctx.ellipse(cx, cy + 6, pr, pr * 1.15, 0, 0, Math.PI * 2); ctx.fill();
         // catchlights
-        ctx.fillStyle = 'rgba(255,255,255,0.95)'; ctx.beginPath(); ctx.arc(cx - irisR * 0.35, cy - irisR * 0.35, irisR * 0.32, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,0.95)'; ctx.beginPath(); ctx.arc(cx - irisR * 0.35, cy - irisR * 0.38, irisR * 0.26, 0, Math.PI * 2); ctx.fill();
         ctx.beginPath(); ctx.arc(cx + irisR * 0.35, cy + irisR * 0.45, irisR * 0.14, 0, Math.PI * 2); ctx.fill();
         // upper lash line
-        ctx.strokeStyle = ink; ctx.lineWidth = 9; ctx.lineCap = 'round'; ctx.beginPath(); ctx.ellipse(cx, cy, eyeW + 1, eyeH + 1, 0, Math.PI * 1.08, Math.PI * 1.92); ctx.stroke();
+        ctx.strokeStyle = ink; ctx.lineWidth = 11; ctx.lineCap = 'round'; ctx.beginPath(); ctx.ellipse(cx, cy, eyeW + 1, eyeH + 1, 0, Math.PI * 1.08, Math.PI * 1.92); ctx.stroke();
         // lower lid hint
         ctx.lineWidth = 3; ctx.globalAlpha = 0.5; ctx.beginPath(); ctx.ellipse(cx, cy, eyeW, eyeH, 0, Math.PI * 0.2, Math.PI * 0.8); ctx.stroke(); ctx.globalAlpha = 1;
         // happy: squash bottom of eye upward with a skin-coloured cheek arc

@@ -21,7 +21,7 @@ export class GardenScene extends WalkScene {
     this.three.background = new THREE.Color(PALETTE.sky);
     this.three.fog = new THREE.Fog(0xd2e8f4, 40, 80);
     this.setupLights({ shadowSize: 26, pos: [14, 26, 10] });
-    this.setupCharacters({ offset: new THREE.Vector3(0, 8.5, 11) });
+    this.setupCharacters({ offset: new THREE.Vector3(0, 6.8, 12) });
     this.spawnLayer = new THREE.Group(); this.three.add(this.spawnLayer);
     this.sky = makeSkyDome(0x3f8fd0, 0xa8d4ee); this.three.add(this.sky);
     this.clouds = makeClouds(8, { radius: 70, height: 26 }); this.three.add(this.clouds);

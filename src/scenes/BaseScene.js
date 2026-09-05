@@ -8,7 +8,7 @@ import { setCurve } from '../world/curve.js';
 export class BaseScene {
   constructor() {
     this.three = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(42, 1, 0.1, 200);
+    this.camera = new THREE.PerspectiveCamera(42, 1, 0.35, 200); // near 0.35: nothing sits closer, and it buys depth precision for face decals
     this.interactables = [];
     this.curve = { curvature: 0, start: 6 };
     this._hold = { target: null, t: 0 };

@@ -164,7 +164,8 @@ export class Gigi {
     s.vx += ((targetX - s.x) * k - s.vx * d) * dt; s.vz += ((targetZ - s.z) * k - s.vz * d) * dt;
     s.x += s.vx * dt; s.z += s.vz * dt;
     const bounce = Math.sin(w) * 0.03 * m;
-    this.sockets.hair.rotation.set(-s.x * 0.6 + bounce, 0, s.z * 0.6); this.sockets.hat.rotation.set(-s.x * 0.8 + bounce, 0, s.z * 0.8);
+    // lag: moving forward (+z local) tips hair/hat back (negative x rotation)
+    this.sockets.hair.rotation.set(s.x * 0.6 + bounce, 0, -s.z * 0.6); this.sockets.hat.rotation.set(s.x * 0.8 + bounce, 0, -s.z * 0.8);
     this.sockets.hair.position.y = Math.abs(Math.sin(w + 0.5)) * 0.01 * m;
     this.face.update(dt);
   }

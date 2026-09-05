@@ -3,7 +3,7 @@ import { damp } from './Tween.js';
 
 /** High-angle third-person follow camera with smoothing and a small look-ahead. */
 export class FollowCamera {
-  constructor(camera, { offset = new THREE.Vector3(0, 8.5, 11), lookAhead = 1.2, lambda = 5, lookLambda = 7 } = {}) {
+  constructor(camera, { offset = new THREE.Vector3(0, 6.8, 12), lookAhead = 1.2, lambda = 5, lookLambda = 7 } = {}) {
     this.camera = camera; this.offset = offset.clone(); this.lookAhead = lookAhead; this.lambda = lambda; this.lookLambda = lookLambda;
     this.target = new THREE.Vector3(); this.look = new THREE.Vector3(); this.pos = new THREE.Vector3();
     this.shake = 0;

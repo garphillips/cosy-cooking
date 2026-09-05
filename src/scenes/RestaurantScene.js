@@ -110,7 +110,7 @@ export class RestaurantScene extends WalkScene {
     const outside = box(30, 0.1, 10, PALETTE.path); outside.position.set(0, -0.05, 12.5); W.add(outside);
 
     // characters
-    this.setupCharacters({ offset: new THREE.Vector3(0, 8.5, 9.5) });
+    this.setupCharacters({ offset: new THREE.Vector3(0, 7.2, 10.5) });
     this.follow.bounds = { minX: -4, maxX: 4, minZ: -3.5, maxZ: 3.5 };
     this.player.setColliders(collectColliders(W));
     this.player.setBounds({ minX: -8.4, maxX: 8.4, minZ: -6.3, maxZ: 6.4 });
