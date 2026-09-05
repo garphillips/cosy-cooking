@@ -12,6 +12,8 @@ function cachedGeo(key, make) { if (!geoCache.has(key)) geoCache.set(key, make()
 export function roundedBoxGeo(w, h, d, r = 0.08, seg = 2) {
   // Painted-toy look: every box gets a soft bevel, clamped so thin slabs stay crisp.
   const rr = Math.min(r, Math.min(w, h, d) * 0.45);
+  // long pieces (fence rails, walls) get segments along their length so the curved horizon bends them too
+  if (Math.max(w, d) > 6) return cachedGeo(`bl:${w}:${h}:${d}`, () => new THREE.BoxGeometry(w, h, d, Math.max(1, Math.ceil(w / 2)), 1, Math.max(1, Math.ceil(d / 2))));
   if (rr < 0.012) return cachedGeo(`b:${w}:${h}:${d}`, () => new THREE.BoxGeometry(w, h, d));
   return cachedGeo(`rb:${w}:${h}:${d}:${rr}`, () => new RoundedBoxGeometry(w, h, d, seg, rr));
 }
@@ -40,7 +42,9 @@ export function capsule(r, len, color, opts = {}) {
 export function makeGround(size = 80, color = PALETTE.grass, textured = true) {
   const mat = textured ? new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 1, map: groundTexture(color, new THREE.Color(color).multiplyScalar(0.86).getHex(), new THREE.Color(color).multiplyScalar(1.12).getHex(), size / 7) }) : makeToyMaterial({ color, roughness: 1 });
   if (textured) { const { applyCurve } = curveMod; applyCurve(mat); }
-  const g = new THREE.Mesh(new THREE.PlaneGeometry(size, size, 1, 1), mat);
+  // Tessellated so the curved-horizon vertex displacement bends the ground smoothly instead of
+  // interpolating one huge quad (which sank the grass under everything standing on it).
+  const g = new THREE.Mesh(new THREE.PlaneGeometry(size, size, 64, 64), mat);
   g.rotation.x = -Math.PI / 2; g.receiveShadow = true; g.position.y = 0;
   return g;
 }
@@ -48,7 +52,7 @@ export function makeGround(size = 80, color = PALETTE.grass, textured = true) {
 /** A path segment between two points (flat slab just above ground). */
 export function makePath(ax, az, bx, bz, width = 2.2, color = PALETTE.path) {
   const len = Math.hypot(bx - ax, bz - az);
-  const m = new THREE.Mesh(new THREE.BoxGeometry(width, 0.06, len + width * 0.6), makeToyMaterial({ color, roughness: 1 }));
+  const m = new THREE.Mesh(new THREE.BoxGeometry(width, 0.06, len + width * 0.6, 1, 1, Math.max(1, Math.round(len / 2))), makeToyMaterial({ color, roughness: 1 }));
   m.position.set((ax + bx) / 2, 0.03, (az + bz) / 2);
   m.rotation.y = Math.atan2(bx - ax, bz - az);
   m.receiveShadow = true;
@@ -56,7 +60,7 @@ export function makePath(ax, az, bx, bz, width = 2.2, color = PALETTE.path) {
 }
 export function makePlaza(x, z, w, d, color = PALETTE.path) {
   const mat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 1, map: tileTexture(color, new THREE.Color(color).multiplyScalar(0.8).getHex(), Math.max(2, Math.round(w / 3))) }); curveMod.applyCurve(mat);
-  const m = new THREE.Mesh(new THREE.BoxGeometry(w, 0.06, d), mat);
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w, 0.06, d, Math.max(1, Math.round(w / 2)), 1, Math.max(1, Math.round(d / 2))), mat);
   m.position.set(x, 0.03, z); m.receiveShadow = true; return m;
 }
 
