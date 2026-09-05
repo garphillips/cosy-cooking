@@ -1,0 +1,4 @@
+/* Bundled fonts (SIL Open Font License): Borel, Sono, Nunito — Latin subsets from Google Fonts */
+@font-face { font-family: 'Borel'; font-style: normal; font-weight: 400; font-display: swap; src: url('./fonts/borel-400.woff2') format('woff2'); }
+@font-face { font-family: 'Nunito'; font-style: normal; font-weight: 200 1000; font-display: swap; src: url('./fonts/nunito-variable.woff2') format('woff2'); }
+@font-face { font-family: 'Sono'; font-style: normal; font-weight: 200 800; font-display: swap; src: url('./fonts/sono-variable.woff2') format('woff2'); }

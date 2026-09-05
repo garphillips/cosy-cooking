@@ -67,5 +67,5 @@ Each returns 0..1. Star thresholds: ≥ 0.85 ★★★, ≥ 0.55 ★★.
 - **Serving** is a short auto-walk cutscene after plating (input returns once the customer is eating) — keeps the 3-table room readable and avoids fiddly plate-carrying.
 - **Freestyle with no matching recipe** returns the ingredients ("Sprout shakes his head") instead of producing a bad dish — nothing is ever wasted.
 - **Day** advances when you leave the garden (one morning per trip). Friendship hearts count consecutive days served.
-- **Fonts** come from Google Fonts when online and fall back to system fonts offline, so the single-file build still has zero hard dependencies.
+- **Fonts** (Borel, Sono, Nunito; OFL) are bundled as woff2 in `src/fonts/` and inlined into the single-file build, so it makes no third-party requests.
 - **Depth of field** is approximated with distance fog/haze rather than a bokeh pass (too costly on integrated GPUs).
