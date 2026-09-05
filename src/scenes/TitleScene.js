@@ -7,6 +7,7 @@ import { el } from '../ui/UI.js';
 import { audio } from '../engine/Audio.js';
 import { makeSkyDome, makeClouds } from '../world/textures.js';
 import { PALETTE } from '../world/materials.js';
+import logoUrl from '../assets/logo.webp';
 
 export class TitleScene extends BaseScene {
   touchControls = false; // tap-driven menu scene: no virtual stick/buttons
@@ -26,7 +27,7 @@ export class TitleScene extends BaseScene {
     const b1 = makeBush(0.8); b1.position.set(2.5, 0, 1.5); this.diorama.add(b1);
     const b2 = makeBush(0.7); b2.position.set(-2.8, 0, 1.2); this.diorama.add(b2);
     this.diorama.add(scatterInstanced(60, { x: 0, z: 0, w: 9, d: 9 }, { avoid: [{ x: -0.6, z: 0.4, r: 1 }, { x: 0.9, z: 0.6, r: 1 }] }));
-    this.camera.position.set(0, 4.6, 12.5); this.camera.lookAt(0, 1.0, 0);
+    this.camera.position.set(0, 4.4, 12.5); this.camera.lookAt(0, 1.9, 0);
   }
   enter() {
     super.enter(); this.build();
@@ -35,7 +36,7 @@ export class TitleScene extends BaseScene {
     audio.stopAmbience(); audio.startMusic();
     const wrap = el('div', 'title-screen');
     const hasSave = this.state.hasSave();
-    wrap.innerHTML = `<div class="logo"><h1>Cosy Cooking</h1><p>with Gigi &amp; Sprout</p></div>`;
+    wrap.innerHTML = `<div class="logo"><h1 class="sr-only">Cosy Cooking</h1><img src="${logoUrl}" alt="Cosy Cooking" draggable="false" /></div>`;
     const menu = el('div', 'menu');
     if (hasSave) {
       const cont = el('button', 'btn', 'Continue'); cont.onclick = () => { audio.init(); audio.click(); this.state.load(); this.game.scenes.go(this.state.game.created ? 'hub' : 'creator'); }; menu.appendChild(cont);
