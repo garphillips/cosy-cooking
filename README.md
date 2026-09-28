@@ -16,7 +16,17 @@ npm run dev        # http://localhost:5179
 npm run build      # writes dist/index.html (everything inlined)
 ```
 
-Requires Node 18+ (tested on Node 20). The Vite dev server hot-reloads.
+Requires Node 18+ (tested on Node 20). The Vite dev server hot-reloads. Vite is pinned to 6 on purpose (Vite 8's native rolldown build fails to load on Apple Silicon with Node 20).
+
+To check the built file runs from `file://` without a browser window, use headless Chrome with `--dump-dom --timeout=7000` (screenshots never complete because the render loop runs forever).
+
+## Deploy
+
+The game is live at [cosycook.ing](https://cosycook.ing) on Cloudflare Pages.
+
+```bash
+npm run deploy     # builds, then `wrangler pages deploy dist` (needs `npx wrangler login` once)
+```
 
 ## Controls
 

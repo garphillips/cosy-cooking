@@ -61,6 +61,19 @@ Each returns 0..1. Star thresholds: ≥ 0.85 ★★★, ≥ 0.55 ★★.
 - **Toggle**: pause menu → Character style → Cartoon / Classic (`settings.characterStyle`). Classic sets `uToonMix = 0` and hides hulls; faces and proportions stay.
 - **Revert**: `git checkout pre-cartoon -- . && npm run build` restores the pre-pass build exactly.
 
+## Performance backlog (not yet implemented)
+Profiled 2026-09-05 at 1280×720 on an M3 Pro. Plain render 2.5–3.7 ms/frame; the full post stack 10.8–14.2 ms. GTAO alone 4.5–7 ms, bloom ~2 ms, SMAA ~2 ms, shadows ~1.4 ms, character outline hulls 0.4–0.9 ms. Draw calls: hub 223, restaurant 368, garden 664 (spawn plants are 5–10 meshes each; fences are separate posts and rails).
+
+Ranked options, biggest gain first. 1–4 are roughly an hour together; 5 matters most on mobile.
+1. GTAO at half resolution, or move it to a "Fancy+" tier above Fancy.
+2. Cap the pixel ratio at 1.5 when effects are on, 1.25 on touch devices.
+3. Replace SMAA with an MSAA render target.
+4. Add a Medium tier (bloom + AA, no AO) that auto mode steps down to before Simple.
+5. Merge static garden geometry per material (664 → ~200 draw calls).
+6. 1024 shadow map with a tighter frustum on touch.
+
+Where to work: post stack in `src/engine/Post.js`; quality tiers in `Game.applyGraphicsSetting` (`src/engine/Game.js`); outlines in `src/world/outline.js`.
+
 ## Decisions & deviations from the brief
 - **Pick quality** uses a visible ripeness pulse (time your hold) so every gathering type has a light skill element, rather than a pure hold.
 - **Meadow unlock** is lifetime-earned CP so spending never re-locks it.
